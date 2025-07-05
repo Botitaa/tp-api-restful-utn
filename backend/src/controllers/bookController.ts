@@ -7,8 +7,8 @@ const getAllBooks = async (req: Request, res: Response): Promise<any> => {
     const books = await Book.find()
     res.json({
       succes: true,
-      data: books,
-      message: "obteniendo los libros"
+      message: "obteniendo los libros",
+      data: books
     })
 
   } catch (error) {
@@ -39,7 +39,8 @@ const getBookId = async (req: Request, res: Response): Promise<any> => {
     if (booksId) {
       res.status(200).json({
         succes: true,
-        message: "libro encontrado correctamente", booksId
+        message: "libro encontrado correctamente",
+        data: booksId
       })
     } else {
       res.status(404).json({
@@ -56,5 +57,21 @@ const getBookId = async (req: Request, res: Response): Promise<any> => {
   }
 }
 
-export { getBookId }
-export { getAllBooks }
+const addBook = async (req: Request, res: Response): Promise<any> => {
+  try {
+
+    const body = req.body
+    const newBook = new Book(body)
+    await newBook.save()
+
+
+  } catch (error) {
+    const err = error as Error
+    res.status(500).json({
+      succes: false,
+      message: err.message
+    })
+  }
+}
+
+export { getAllBooks, getBookId, addBook }
