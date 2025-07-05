@@ -1,12 +1,5 @@
 import { model, Schema } from "mongoose";
-
-export interface IBook {
-  title: string;
-  author: string;
-  publishedYear: number;
-  genre: string;
-  available: boolean;
-}
+import { IBook } from "../interfaces/bookInterface";
 
 const bookSchema = new Schema<IBook>(
   {

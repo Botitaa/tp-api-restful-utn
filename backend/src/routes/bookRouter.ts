@@ -1,8 +1,9 @@
 import { Router } from "express"
-import { getBooks } from "../controllers/bookController"
+import { getAllBooks, getBookId } from "../controllers/bookController"
 
 const bookRouter = Router()
 
-bookRouter.get("/api/books", getBooks)
+bookRouter.get("/", getAllBooks)
+bookRouter.get("/:id", getBookId)
 
 export { bookRouter }

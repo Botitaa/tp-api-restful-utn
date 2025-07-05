@@ -1,7 +1,8 @@
+import { Types } from "mongoose"
 import { Book } from "../models/bookModel"
 import { Request, Response } from "express"
 
-const getBooks = async (req: Request, res: Response): Promise<any> => {
+const getAllBooks = async (req: Request, res: Response): Promise<any> => {
   try {
     const books = await Book.find()
     res.json({
@@ -12,6 +13,42 @@ const getBooks = async (req: Request, res: Response): Promise<any> => {
 
   } catch (error) {
     const err = error as Error
+    res.status(404).json({
+      succes: false,
+      message: err.message
+    })
+  }
+}
+
+const getBookId = async (req: Request, res: Response): Promise<any> => {
+  try {
+
+    const { id } = req.params;
+
+    // Validar si el id es un ObjectId válido
+    if (!Types.ObjectId.isValid(id)) {
+      res.status(400).json({
+        success: false,
+        message: "ID inválido",
+      });
+      return;
+    }
+
+    const booksId = await Book.findById(id)
+
+    if (booksId) {
+      res.status(200).json({
+        succes: true,
+        message: "libro encontrado correctamente", booksId
+      })
+    } else {
+      res.status(404).json({
+        succes: false,
+        message: "libro no encontrado"
+      })
+    }
+  } catch (error) {
+    const err = error as Error
     res.status(500).json({
       succes: false,
       message: err.message
@@ -19,4 +56,5 @@ const getBooks = async (req: Request, res: Response): Promise<any> => {
   }
 }
 
-export { getBooks }
+export { getBookId }
+export { getAllBooks }
