@@ -74,4 +74,44 @@ const addBook = async (req: Request, res: Response): Promise<any> => {
   }
 }
 
-export { getAllBooks, getBookId, addBook }
+const deleteBook = async (req: Request, res: Response): Promise<any> => {
+  try {
+
+    const { id } = req.params;
+
+    // Validar si el id es un ObjectId válido
+    if (!Types.ObjectId.isValid(id)) {
+      res.status(400).json({
+        success: false,
+        message: "ID inválido",
+      });
+      return;
+    }
+
+    const booksId = await Book.findById(id)
+
+    if (booksId) {
+
+      await booksId.deleteOne()
+
+      res.status(200).json({
+        succes: true,
+        message: "libro eliminado correctamente",
+        data: booksId
+      })
+    } else {
+      res.status(404).json({
+        succes: false,
+        message: "libro no encontrado"
+      })
+    }
+  } catch (error) {
+    const err = error as Error
+    res.status(500).json({
+      succes: false,
+      message: err.message
+    })
+  }
+}
+
+export { getAllBooks, getBookId, addBook, deleteBook }
